@@ -1,6 +1,6 @@
 package org.example.model;
 
-import java.util.Locale;
+
 
 
 public final class AnimalFactory {
@@ -12,7 +12,7 @@ public final class AnimalFactory {
          if(species==null){
              throw  new IllegalArgumentException("Unknown spcies"+species);
          }
-         return  switch (species.trim().toLowerCase(Locale.ROOT)){
+         return  switch (species.trim().toLowerCase()){
              case "dog"-> new Dog(name,age);
              case "cat"-> new Cat(name,age);
              case "bird"-> new Bird(name,age);

@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import org.example.model.AdoptionStatus;
 import org.example.model.Animal;
 import org.example.model.AnimalId;
-import java.util.Comparator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,15 +40,41 @@ public class Shelter <T extends Animal>{
                 .toList();
     }
 
-    public List<T>getSortedAnimals(Comparator <T>comparator){
+    public List<T>getSortedByName(){
 
-        List<T>sorted =new ArrayList<>(animals);
-        sorted.sort(comparator);
-        return  sorted;
+        List<T> sorted = new ArrayList<>(animals);
+        for (int i = 1; i < sorted.size(); i++) {
+            T current = sorted.get(i);
+            int j = i - 1;
+            while (j >= 0 && sorted.get(j).getName().compareToIgnoreCase(current.getName()) > 0) {
+                sorted.set(j + 1, sorted.get(j));
+                j--;
+            }
+            sorted.set(j + 1, current);
+        }
+        return sorted;
     }
-
+    // sorted copy by age (youngest first)
+    public List<T> getSortedByAge() {
+        List<T> sorted = new ArrayList<>(animals);
+        for (int i = 1; i < sorted.size(); i++) {
+            T current = sorted.get(i);
+            int j = i - 1;
+            while (j >= 0 && sorted.get(j).getAge() > current.getAge()) {
+                sorted.set(j + 1, sorted.get(j));
+                j--;
+            }
+            sorted.set(j + 1, current);
+        }
+        return sorted;
+    }
+    // original method kept: adopter is unknown
+    public void markAsAdopted(String id){
+        markAsAdopted(id, "Unknown");
+    }
     public void markAsAdopted(String id,String adopterName){
         AnimalId wantedId=new AnimalId(id);
+
         T animal=animals.stream()
                 .filter(a->a.getId().equals(wantedId))
                 .findFirst()
@@ -58,7 +84,7 @@ public class Shelter <T extends Animal>{
             throw new IllegalArgumentException(animal.getName()+" is already adaopted");
         }
 
- // create the record first: if the adopter name is invalid, the animal stays available
+   // create the record first: if the adopter name is invalid, the animal stays available
         AdoptionRecord record = new AdoptionRecord(animal, LocalDate.now(), adopterName);
         animal.markAsAdopted();
         adoptionHistory.add(record);

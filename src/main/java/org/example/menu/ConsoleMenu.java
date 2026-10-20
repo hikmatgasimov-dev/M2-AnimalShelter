@@ -1,12 +1,12 @@
 package org.example.menu;
+
 import org.example.model.*;
 
 
 import org.example.shelter.Shelter;
 
 import org.example.shelter.AnimalStats;
-import java.util.Comparator;
-import java.util.Locale;
+
 import java.util.Scanner;
 import java.util.List;
 
@@ -70,7 +70,7 @@ public class ConsoleMenu {
 
         try {
             int age = Integer.parseInt(ageText);
-            Animal animal = AnimalFactory.create(species,name,age);
+            Animal animal = AnimalFactory.create(species, name, age);
             shelter.addAnimal(animal);
             System.out.println("Added: " + animal);
         } catch (NumberFormatException e) {
@@ -109,10 +109,10 @@ public class ConsoleMenu {
         }
         printAnimals(available);
         String id = readLine("Enter the id of the animal to adopt: ");
-        String adopterName=readLine("Adopter name:");
+        String adopterName = readLine("Adopter name:");
         try {
 
-            shelter.markAsAdopted(id,adopterName);
+            shelter.markAsAdopted(id, adopterName);
             System.out.println("Animal marked as adopted.");
 
         } catch (IllegalArgumentException | IllegalStateException e) {
@@ -122,20 +122,22 @@ public class ConsoleMenu {
     }
 
     private void sortAnimals() {
-        String choice=readLine("Sort by 1) name or 2) age: ");
+        String choice = readLine("Sort by 1) name or 2) age: ");
 
-        Comparator<Animal>comparator;
-        switch (choice){
-            case "1"->comparator=Comparator.comparing(Animal::getName,String.CASE_INSENSITIVE_ORDER);
-            case "2"->comparator=Comparator.comparingInt(Animal::getAge);
 
-            default -> {
-                System.out.println("Please choose 1 or 2.");
-                return;
-            }
+        if (choice.equals("1")) {
+            printAnimals(shelter.getSortedByName());
         }
-        printAnimals(shelter.getSortedAnimals(comparator));
+        else if(choice.equals("2")){
+
+            printAnimals(shelter.getSortedByAge());
+        }
+        else{
+            System.out.println("Please choose 1 or 2");
+        }
+
     }
+
     private void showStatistics() {
         List<Animal> animals = shelter.getAllAnimals();
         if (animals.isEmpty()) {
@@ -144,31 +146,32 @@ public class ConsoleMenu {
         }
 
         double average = AnimalStats.averageAge(animals);
-        Animal oldest=AnimalStats.oldest(animals);
+        Animal oldest = AnimalStats.oldest(animals);
 
         System.out.println("Total animals: " + animals.size());
         System.out.println("Average age: " + Math.round(average * 100.0) / 100.0);
         System.out.println("Oldest animal: " + oldest.getName() + " (" + oldest.getAge() + " years old)");
 
         System.out.println("Animalss per speciess:");
-        String []speciesList={"Dog","Cat","Bird","Rabbit"};
-        for (String species:speciesList){
-            int count=AnimalStats.countBySpecies(animals,species);
-            if(count>0){
-                System.out.println(" "+species+ " "+count);
+        String[] speciesList = {"Dog", "Cat", "Bird", "Rabbit"};
+        for (String species : speciesList) {
+            int count = AnimalStats.countBySpecies(animals, species);
+            if (count > 0) {
+                System.out.println(" " + species + " " + count);
             }
         }
 
     }
 
-    private void showAdoptionHistory(){
-        List<AdoptionRecord>history=shelter.getAdoptionHistory();
-        if(history.isEmpty()){
+    private void showAdoptionHistory() {
+        List<AdoptionRecord> history = shelter.getAdoptionHistory();
+        if (history.isEmpty()) {
             System.out.println("No adoption yet.");
             return;
         }
         history.forEach(System.out::println);
     }
+
     private void printMenu() {
         System.out.println("""
                 1. Add animal
