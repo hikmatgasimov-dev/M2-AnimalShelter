@@ -6,6 +6,7 @@ import org.example.model.Cat;
 import org.example.model.Dog;
 import org.example.shelter.Shelter;
 
+import org.example.shelter.AnimalStats;
 import java.util.Comparator;
 import java.util.Locale;
 import java.util.Scanner;
@@ -19,6 +20,7 @@ public class ConsoleMenu {
     private static final int OPTION_LIST_AVAILABLE = 4;
     private static final int OPTION_MARK_ADOPTED = 5;
     private static final int OPTION_SORT = 6;
+    private static final int OPTION_STATISTICS = 7;
     private static final int OPTION_EXIT = 0;
 
     private final Shelter<Animal> shelter;
@@ -49,11 +51,12 @@ public class ConsoleMenu {
                 case OPTION_LIST_AVAILABLE -> printAnimals(shelter.findAvailableAnimals());
                 case OPTION_MARK_ADOPTED -> markAsAdopted();
                 case OPTION_SORT -> sortAnimals();
+                case OPTION_STATISTICS -> showStatistics();
                 case OPTION_EXIT -> {
                     System.out.println("GoodBye");
                     running = false;
                 }
-                default -> System.out.println("Invalid option,please choose 0-6.");
+                default -> System.out.println("Invalid option,please choose 0-7. ");
             }
         }
 
@@ -122,7 +125,7 @@ public class ConsoleMenu {
     }
 
     private void sortAnimals() {
-        String choice=readLine("Sort by 1) name or 2) age:");
+        String choice=readLine("Sort by 1) name or 2) age: ");
 
         Comparator<Animal>comparator;
         switch (choice){
@@ -136,7 +139,23 @@ public class ConsoleMenu {
         }
         printAnimals(shelter.getSortedAnimals(comparator));
     }
+    private void showStatistics() {
+        List<Animal> animals = shelter.getAllAnimals();
+        if (animals.isEmpty()) {
+            System.out.println("No animals found.");
+            return;
+        }
 
+        double average = AnimalStats.averageAge(animals).orElse(0);
+        System.out.println("Total animals: " + animals.size());
+        System.out.println("Average age: " + Math.round(average * 100.0) / 100.0);
+        AnimalStats.oldest(animals).ifPresent(animal ->
+                System.out.println("Oldest animal: " + animal.getName() + " (" + animal.getAge() + " years old)"));
+
+        System.out.println("Animals per species:");
+        AnimalStats.countBySpecies(animals).forEach((species, count) ->
+                System.out.println("  " + species + ": " + count));
+    }
     private void printMenu() {
         System.out.println("""
                 1. Add animal
@@ -145,6 +164,7 @@ public class ConsoleMenu {
                 4. List available animals
                 5. Mark animal as adopted
                 6. List animals sorted by name or age
+                7. Show statistics
                 0. Exit
                 """);
     }
