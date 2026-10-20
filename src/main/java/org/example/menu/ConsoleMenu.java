@@ -107,7 +107,7 @@ public class ConsoleMenu {
             return;
         }
         printAnimals(avaliable);
-        String id = readLine("Enter the id of the animal to adopt:");
+        String id = readLine("Enter the id of the animal to adopt: ");
         try {
             shelter.markAsAdopted(id);
             System.out.println("Animal marked as adopted.");
