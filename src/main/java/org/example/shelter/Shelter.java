@@ -3,7 +3,7 @@ package org.example.shelter;
 import org.example.model.AdoptionStatus;
 import org.example.model.Animal;
 import org.example.model.AnimalId;
-
+import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +34,13 @@ public class Shelter <T extends Animal>{
 
         return animals.stream()
                 .filter(animal->animal.getAdoptionStatus()== AdoptionStatus.AVAILABLE)
+                .toList();
+    }
+
+    public List<T>getSortedAnimals(Comparator<? super T>comparator){
+
+        return  animals.stream()
+                .sorted(comparator)
                 .toList();
     }
 

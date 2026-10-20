@@ -6,6 +6,7 @@ import org.example.model.Cat;
 import org.example.model.Dog;
 import org.example.shelter.Shelter;
 
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.List;
@@ -17,6 +18,7 @@ public class ConsoleMenu {
     private static final int OPTION_FIND_BY_SPECIES = 3;
     private static final int OPTION_LIST_AVAILABLE = 4;
     private static final int OPTION_MARK_ADOPTED = 5;
+    private static final int OPTION_SORT = 6;
     private static final int OPTION_EXIT = 0;
 
     private final Shelter<Animal> shelter;
@@ -46,11 +48,12 @@ public class ConsoleMenu {
                 case OPTION_FIND_BY_SPECIES -> findBySpecies();
                 case OPTION_LIST_AVAILABLE -> printAnimals(shelter.findAvailableAnimals());
                 case OPTION_MARK_ADOPTED -> markAsAdopted();
+                case OPTION_SORT -> sortAnimals();
                 case OPTION_EXIT -> {
                     System.out.println("GoodBye");
-                    running=false;
+                    running = false;
                 }
-                default -> System.out.println("Invalid option,please choose 0-5.");
+                default -> System.out.println("Invalid option,please choose 0-6.");
             }
         }
 
@@ -118,6 +121,22 @@ public class ConsoleMenu {
 
     }
 
+    private void sortAnimals() {
+        String choice=readLine("Sort by 1) name or 2) age:");
+
+        Comparator<Animal>comparator;
+        switch (choice){
+            case "1"->comparator=Comparator.comparing(Animal::getName,String.CASE_INSENSITIVE_ORDER);
+            case "2"->comparator=Comparator.comparingInt(Animal::getAge);
+
+            default -> {
+                System.out.println("Please choose 1 or 2.");
+                return;
+            }
+        }
+        printAnimals(shelter.getSortedAnimals(comparator));
+    }
+
     private void printMenu() {
         System.out.println("""
                 1. Add animal
@@ -125,6 +144,7 @@ public class ConsoleMenu {
                 3. Find animals by species
                 4. List available animals
                 5. Mark animal as adopted
+                6. List animals sorted by name or age
                 0. Exit
                 """);
     }
