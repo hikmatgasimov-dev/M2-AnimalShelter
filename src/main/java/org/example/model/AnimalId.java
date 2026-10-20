@@ -1,7 +1,10 @@
 package org.example.model;
 
+import lombok.EqualsAndHashCode;
+
 import java.util.UUID;
 
+@EqualsAndHashCode
 public final class AnimalId {
     private final String value;
     public AnimalId(){
@@ -10,7 +13,7 @@ public final class AnimalId {
 
     public AnimalId(String value){
         if(value==null||value.isBlank()){
-            throw new IllegalArgumentException("Animal id must not empty");
+            throw new IllegalArgumentException("Animal must not empty");
         }
         this.value = value;
     }

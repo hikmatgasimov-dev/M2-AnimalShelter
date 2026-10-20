@@ -12,7 +12,7 @@ public sealed abstract class Animal permits Dog,Cat,Bird {
     private AdoptionStatus adoptionStatus;
 
     protected Animal(AnimalId id, String name, int age) {
-        Objects.requireNonNull(id,"Animal must not be null");
+        Objects.requireNonNull(id,"Animal id must not be null");
 
         if(name==null||name.isBlank()){
             throw new IllegalArgumentException("Name must not be empty");
