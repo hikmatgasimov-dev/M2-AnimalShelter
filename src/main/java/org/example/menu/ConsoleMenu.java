@@ -100,13 +100,13 @@ public class ConsoleMenu {
     }
 
     private void markAsAdopted() {
-        List<Animal> avaliable = shelter.findAvailableAnimals();
+        List<Animal> available = shelter.findAvailableAnimals();
 
-        if (avaliable.isEmpty()) {
+        if (available.isEmpty()) {
             System.out.println("There are no animals waiting for adoption.");
             return;
         }
-        printAnimals(avaliable);
+        printAnimals(available);
         String id = readLine("Enter the id of the animal to adopt: ");
         try {
             shelter.markAsAdopted(id);
