@@ -1,4 +1,6 @@
 package org.example.menu;
+import org.example.model.AdoptionRecord;
+
 
 import org.example.model.Animal;
 import org.example.model.Bird;
@@ -21,6 +23,7 @@ public class ConsoleMenu {
     private static final int OPTION_MARK_ADOPTED = 5;
     private static final int OPTION_SORT = 6;
     private static final int OPTION_STATISTICS = 7;
+    private static final int OPTION_HISTORY = 8;
     private static final int OPTION_EXIT = 0;
 
     private final Shelter<Animal> shelter;
@@ -52,11 +55,12 @@ public class ConsoleMenu {
                 case OPTION_MARK_ADOPTED -> markAsAdopted();
                 case OPTION_SORT -> sortAnimals();
                 case OPTION_STATISTICS -> showStatistics();
+                case OPTION_HISTORY -> showAdoptionHistory();
                 case OPTION_EXIT -> {
                     System.out.println("GoodBye");
                     running = false;
                 }
-                default -> System.out.println("Invalid option,please choose 0-7. ");
+                default -> System.out.println("Invalid option,please choose 0-8. ");
             }
         }
 
@@ -114,8 +118,10 @@ public class ConsoleMenu {
         }
         printAnimals(available);
         String id = readLine("Enter the id of the animal to adopt: ");
+        String adopterName=readLine("Adopter name:");
         try {
-            shelter.markAsAdopted(id);
+
+            shelter.markAsAdopted(id,adopterName);
             System.out.println("Animal marked as adopted.");
 
         } catch (IllegalArgumentException | IllegalStateException e) {
@@ -156,6 +162,15 @@ public class ConsoleMenu {
         AnimalStats.countBySpecies(animals).forEach((species, count) ->
                 System.out.println("  " + species + ": " + count));
     }
+
+    private void showAdoptionHistory(){
+        List<AdoptionRecord>history=shelter.getAdoptionHistory();
+        if(history.isEmpty()){
+            System.out.println("No adoption yet.");
+            return;
+        }
+        history.forEach(System.out::println);
+    }
     private void printMenu() {
         System.out.println("""
                 1. Add animal
@@ -165,6 +180,7 @@ public class ConsoleMenu {
                 5. Mark animal as adopted
                 6. List animals sorted by name or age
                 7. Show statistics
+                8. Show adaption history
                 0. Exit
                 """);
     }
