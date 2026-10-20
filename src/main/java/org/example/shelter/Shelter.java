@@ -1,0 +1,52 @@
+package org.example.shelter;
+
+import org.example.model.AdoptionStatus;
+import org.example.model.Animal;
+import org.example.model.AnimalId;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Shelter <T extends Animal>{
+    private final List<T> animals = new ArrayList<>();
+
+    public void addAnimal(T animal){
+        animals.add(animal);
+    }
+
+    // returns a copy, so outside code cannot change the shelter's own list
+    public List<T> getAllAnimals(){
+
+        return List.copyOf(animals);
+    }
+
+    public List<T> findBySpecies(String species){
+        if(species==null){
+            return  List.of();
+        }
+        String wanted=species.trim();
+        return  animals.stream()
+                .filter(animal->animal.getSpecies().equalsIgnoreCase(wanted))
+                .toList();
+    }
+
+    public List<T> findAvailableAnimals(){
+
+        return animals.stream()
+                .filter(animal->animal.getAdoptionStatus()== AdoptionStatus.AVAILABLE)
+                .toList();
+    }
+
+    public void markAsAdopted(String id){
+        AnimalId wantedId=new AnimalId(id);
+        T animal=animals.stream()
+                .filter(a->a.getId().equals(wantedId))
+                .findFirst()
+                .orElseThrow(()->new IllegalArgumentException("No animal with id "+id));
+
+        if(animal.getAdoptionStatus()==AdoptionStatus.ADOPTED){
+            throw new IllegalArgumentException(animal.getName()+" is already adaopted");
+        }
+        animal.markAsAdopted();
+    }
+}
