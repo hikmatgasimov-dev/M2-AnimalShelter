@@ -14,7 +14,7 @@ public class Main {
         // pre-load some data
         shelter.addAnimal(new Dog(new AnimalId(),"Buddy",3));
         shelter.addAnimal(new Cat(new AnimalId(),"Luna",5));
-        shelter.addAnimal(new Bird(new AnimalId(),"Kiwi",1));
+        shelter.addAnimal(new Bird(new AnimalId(), "Kiwi", 1));
 
         // create a ConsoleMenu object
         ConsoleMenu consoleMenu = new ConsoleMenu(shelter);

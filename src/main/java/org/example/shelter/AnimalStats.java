@@ -2,36 +2,46 @@ package org.example.shelter;
 
 import org.example.model.Animal;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
 public final class AnimalStats {
 
     private AnimalStats() {
-        // nobody should create an instance of this class
-    }
+            }
 
     // empty if the collection is empty, so we never divide by zero
-    public static <T extends Animal> OptionalDouble averageAge(Collection<T> animals) {
-        return animals.stream()
-                .mapToInt(Animal::getAge)
-                .average();
+    public static <T extends Animal> double averageAge(List<T> animals) {
+       if(animals.isEmpty()){
+           return 0;
+       }
+       int total=0;
+       for(T animal:animals){
+           total+=animal.getAge();
+
+       }
+       return (double) total/animals.size();
     }
 
-    public static <T extends Animal> Optional<T> oldest(Collection<T> animals) {
-        return animals.stream()
-                .max(Comparator.comparingInt(Animal::getAge));
+    public static <T extends Animal> T oldest(List<T> animals) {
+        T oldest=null;
+        for (T animal :animals){
+            if(oldest==null||animal.getAge()>oldest.getAge()){
+                oldest=animal;
+            }
+        }
+        return  oldest;
     }
 
     // species name -> number of animals, sorted by species name
-    public static <T extends Animal> Map<String, Long> countBySpecies(Collection<T> animals) {
-        return animals.stream()
-                .collect(Collectors.groupingBy(Animal::getSpecies, TreeMap::new, Collectors.counting()));
+    public static <T extends Animal> int countBySpecies(List<T>animals,String species) {
+       int count=0;
+       for (T animal:animals){
+           if(animal.getSpecies().equalsIgnoreCase(species)){
+             count++;
+           }
+       }
+       return  count;
     }
 }

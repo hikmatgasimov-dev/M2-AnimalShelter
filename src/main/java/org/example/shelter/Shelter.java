@@ -40,11 +40,11 @@ public class Shelter <T extends Animal>{
                 .toList();
     }
 
-    public List<T>getSortedAnimals(Comparator<? super T>comparator){
+    public List<T>getSortedAnimals(Comparator <T>comparator){
 
-        return  animals.stream()
-                .sorted(comparator)
-                .toList();
+        List<T>sorted =new ArrayList<>(animals);
+        sorted.sort(comparator);
+        return  sorted;
     }
 
     public void markAsAdopted(String id,String adopterName){

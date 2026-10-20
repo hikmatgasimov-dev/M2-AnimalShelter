@@ -1,11 +1,7 @@
 package org.example.menu;
-import org.example.model.AdoptionRecord;
+import org.example.model.*;
 
 
-import org.example.model.Animal;
-import org.example.model.Bird;
-import org.example.model.Cat;
-import org.example.model.Dog;
 import org.example.shelter.Shelter;
 
 import org.example.shelter.AnimalStats;
@@ -70,16 +66,11 @@ public class ConsoleMenu {
     private void addAnimal() {
         String name = readLine("Name: ");
         String ageText = readLine("Age: ");
-        String species = readLine("Species (Dog, Cat, Bird): ");
+        String species = readLine("Species (" + AnimalFactory.SUPPORTED_SPECIES + "): ");
 
         try {
             int age = Integer.parseInt(ageText);
-            Animal animal = switch (species.toLowerCase(Locale.ROOT)) {
-                case "dog" -> new Dog(name, age);
-                case "cat" -> new Cat(name, age);
-                case "bird" -> new Bird(name, age);
-                default -> throw new IllegalArgumentException("Unknown species: " + species);
-            };
+            Animal animal = AnimalFactory.create(species,name,age);
             shelter.addAnimal(animal);
             System.out.println("Added: " + animal);
         } catch (NumberFormatException e) {
@@ -152,15 +143,22 @@ public class ConsoleMenu {
             return;
         }
 
-        double average = AnimalStats.averageAge(animals).orElse(0);
+        double average = AnimalStats.averageAge(animals);
+        Animal oldest=AnimalStats.oldest(animals);
+
         System.out.println("Total animals: " + animals.size());
         System.out.println("Average age: " + Math.round(average * 100.0) / 100.0);
-        AnimalStats.oldest(animals).ifPresent(animal ->
-                System.out.println("Oldest animal: " + animal.getName() + " (" + animal.getAge() + " years old)"));
+        System.out.println("Oldest animal: " + oldest.getName() + " (" + oldest.getAge() + " years old)");
 
-        System.out.println("Animals per species:");
-        AnimalStats.countBySpecies(animals).forEach((species, count) ->
-                System.out.println("  " + species + ": " + count));
+        System.out.println("Animalss per speciess:");
+        String []speciesList={"Dog","Cat","Bird","Rabbit"};
+        for (String species:speciesList){
+            int count=AnimalStats.countBySpecies(animals,species);
+            if(count>0){
+                System.out.println(" "+species+ " "+count);
+            }
+        }
+
     }
 
     private void showAdoptionHistory(){
