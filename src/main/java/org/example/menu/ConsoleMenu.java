@@ -30,7 +30,7 @@ public class ConsoleMenu {
 
         boolean running = true;
 
-        while (running && scanner.hasNextLine()) {
+        while (running) {
             printMenu();
             String input = readLine("Choose an option: ");
             int choice;
@@ -68,14 +68,14 @@ public class ConsoleMenu {
                 case "dog" -> new Dog(name, age);
                 case "cat" -> new Cat(name, age);
                 case "bird" -> new Bird(name, age);
-                default -> throw new IllegalArgumentException("Unknown species:" + species);
+                default -> throw new IllegalArgumentException("Unknown species: " + species);
             };
             shelter.addAnimal(animal);
             System.out.println("Added: " + animal);
         } catch (NumberFormatException e) {
             System.out.println("Age must be whole number");
         } catch (IllegalArgumentException e) {
-            System.out.println("Could not add animal:" + e.getMessage());
+            System.out.println("Could not add animal: " + e.getMessage());
         }
     }
 
